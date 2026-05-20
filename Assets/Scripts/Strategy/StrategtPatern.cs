@@ -23,7 +23,7 @@ namespace Assets.Scripts.Strategy
     {
         [SerializeField] private Enemy _enemyPrefab;
         [SerializeField] private List<Transform> _targets;
-        [SerializeField] private Transform _spawnPoint;
+        [SerializeField] private List<Transform> _spawnPoints;
         [SerializeField] private IdleStrategies _idleStrategies;
         [SerializeField] private ReactingOnPlayerStrategies _reactingOnPlayerStrategies;
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Strategy
 
         private void Start()
         {
-            SpawnEnemy();
+            SpawnAll();
             InitAllEnemys();
         }
 
@@ -68,17 +68,24 @@ namespace Assets.Scripts.Strategy
                     break;
             }
 
-
-
             foreach (var enemy in _enemyPrefabs)
             {
                 enemy.Initialize(_selector, _react, _targets);
             }
         }
 
-        public Enemy SpawnEnemy()
+        public void SpawnAll()
         {
-            Enemy enemy = Instantiate(_enemyPrefab, _spawnPoint.position, Quaternion.identity);
+            foreach(var point in _spawnPoints)
+            {
+                SpawnEnemy(point.position);
+            }
+        }
+
+
+        public Enemy SpawnEnemy(Vector3 position)
+        {
+            Enemy enemy = Instantiate(_enemyPrefab, position, Quaternion.identity);
             _enemyPrefabs.Add(enemy);
 
             return enemy;
